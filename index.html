@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mariano Mangialavori</title>
+<style>
+:root{
+  --bg:#f7f5ef;
+  --surface:#ffffff;
+  --surface-2:#efece2;
+  --ink:#1b1e1a;
+  --ink-soft:#4a5049;
+  --muted:#767d73;
+  --line:#ddd8c8;
+  --accent:#b5651d;
+  --accent-ink:#ffffff;
+  --accent-soft:#f1e2d0;
+  --ok:#3f6e4c;
+  --code-bg:#efece2;
+  --shadow:0 1px 0 rgba(27,30,26,.04);
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'IBM Plex Sans','IBM Plex Sans Devanagari',system-ui,-apple-system,Segoe UI,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12130f;
+    --surface:#1a1c16;
+    --surface-2:#20221b;
+    --ink:#eeeee4;
+    --ink-soft:#c4c6b8;
+    --muted:#8d9082;
+    --line:#31342a;
+    --accent:#e5934a;
+    --accent-ink:#1a1206;
+    --accent-soft:#332617;
+    --ok:#7fbf8f;
+    --code-bg:#20221b;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12130f;
+  --surface:#1a1c16;
+  --surface-2:#20221b;
+  --ink:#eeeee4;
+  --ink-soft:#c4c6b8;
+  --muted:#8d9082;
+  --line:#31342a;
+  --accent:#e5934a;
+  --accent-ink:#1a1206;
+  --accent-soft:#332617;
+  --ok:#7fbf8f;
+  --code-bg:#20221b;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  padding-inline:20px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto}
+h1,h2,h3{font-family:var(--mono);font-weight:600;letter-spacing:-0.01em;text-wrap:balance;color:var(--ink)}
+a{color:var(--accent)}
+a.plain{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono)}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-block:12px;
+  background:color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.topbar nav{display:flex;gap:4px;flex-wrap:wrap}
+.topbar nav a{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--ink-soft);
+  text-decoration:none;
+  padding:6px 9px;
+  border-radius:5px;
+}
+.topbar nav a:hover{background:var(--surface-2);color:var(--ink)}
+.topctrls{display:flex;align-items:center;gap:8px}
+.mark{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.mark .dot{color:var(--accent)}
+
+.langtoggle{
+  display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  font-family:var(--mono);font-size:11px;
+}
+.langtoggle button{
+  appearance:none;border:0;background:var(--surface);color:var(--muted);
+  padding:6px 9px;cursor:pointer;letter-spacing:.05em;
+}
+.langtoggle button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+
+.themetoggle{
+  appearance:none;border:1px solid var(--line);background:var(--surface);
+  color:var(--ink-soft);width:29px;height:29px;border-radius:6px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+
+/* ---------- hero ---------- */
+.hero{padding-block:44px 30px}
+.hero .eyebrow{margin-bottom:10px}
+.hero h1{font-size:clamp(28px,6vw,40px);margin:0 0 6px}
+.hero .role{font-family:var(--mono);color:var(--accent);font-size:15px;margin:0 0 18px}
+.hero p.lede{max-width:62ch;color:var(--ink-soft);font-size:15.5px;margin:0 0 22px}
+
+.statline{
+  display:flex;flex-wrap:wrap;gap:0;
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+  margin-bottom:22px;
+  background:var(--surface);
+}
+.statline div{
+  flex:1 1 140px;
+  padding:12px 16px;
+  border-right:1px solid var(--line);
+}
+.statline div:last-child{border-right:0}
+.statline b{display:block;font-family:var(--mono);font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
+.statline span{font-size:11.5px;color:var(--muted)}
+
+.linkrow{display:flex;flex-wrap:wrap;gap:10px}
+.linkrow a{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:12.5px;
+  padding:8px 12px;border:1px solid var(--line);border-radius:7px;
+  text-decoration:none;color:var(--ink);background:var(--surface);
+}
+.linkrow a:hover{border-color:var(--accent);color:var(--accent)}
+.linkrow a b{color:var(--accent);font-weight:600}
+
+/* ---------- sections ---------- */
+section{padding-block:34px;border-top:1px solid var(--line)}
+section > .eyebrow{margin-bottom:4px}
+section > h2{font-size:20px;margin:0 0 20px}
+
+/* ---------- timeline (experience) ---------- */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tlitem{
+  position:relative;
+  padding:0 0 26px 24px;
+  border-left:1px solid var(--line);
+}
+.tlitem:last-child{border-left-color:transparent;padding-bottom:0}
+.tlitem::before{
+  content:"";position:absolute;left:-4.5px;top:7px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);
+}
+.tlhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:3px}
+.tlhead h3{font-size:15.5px;margin:0}
+.tlhead h3 a{transition:color .18s ease}
+.tlhead h3 a:hover{color:var(--accent)}
+.tlhead .when{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-left:auto}
+.tlvia{font-size:11.5px;font-weight:400;color:var(--muted)}
+.tltag{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);margin:0 0 4px}
+.tlrole{font-size:12.8px;color:var(--ink-soft);margin:0 0 3px;font-weight:500}
+.tlrole a{color:var(--accent)}
+.tldesc{font-size:12.5px;color:var(--muted);font-style:italic;margin:0 0 8px}
+.tldesc a{color:var(--accent);font-style:normal}
+.tlitem ul{margin:0;padding-left:18px;color:var(--ink-soft);font-size:13.8px}
+.tlitem li{margin-bottom:5px}
+.tlitem li:last-child{margin-bottom:0}
+.tlsub{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.tlsub + .tlsub{margin-top:14px;padding-top:14px}
+.tlsub h4{font-family:var(--mono);font-size:12.5px;margin:0 0 3px;color:var(--ink)}
+.tlsub h4 a{transition:color .18s ease}
+.tlsub h4 a:hover{color:var(--accent)}
+
+/* ---------- AI work cards ---------- */
+.aicards{display:flex;flex-direction:column;gap:14px}
+.aicard{
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;
+}
+.aicard .tlhead{margin-bottom:2px}
+.aicard .tlhead h3{font-size:15px}
+.aicard .tag{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ok);
+}
+.aicard p.desc{margin:6px 0 10px;font-size:12.8px;color:var(--muted)}
+.aicard ul{margin:0;padding-left:18px;color:var(--ink-soft);font-size:13.6px}
+.aicard li{margin-bottom:5px}
+.stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.stack span{
+  font-family:var(--mono);font-size:10.8px;color:var(--ink-soft);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:2px 7px;
+}
+
+/* ---------- project grid ---------- */
+.pgroup{margin-bottom:26px}
+.pgroup:last-child{margin-bottom:0}
+.pgroup h3{
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 12px;font-weight:500;
+}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:560px){.pgrid{grid-template-columns:1fr}}
+.pcard{
+  background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:14px 16px;
+  display:flex;flex-direction:column;gap:5px;
+}
+.pcard h4{margin:0;font-size:13.8px;font-family:var(--mono);color:var(--ink)}
+.pcard p{margin:0;font-size:12.6px;color:var(--muted);flex:1}
+.pcard .meta{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.pcard .meta span{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.pcard .meta a{font-family:var(--mono);font-size:11px;text-decoration:none}
+
+.smallgrid{display:flex;flex-wrap:wrap;gap:8px}
+.smallcard{
+  font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+  border:1px solid var(--line);border-radius:6px;padding:7px 10px;
+  text-decoration:none;display:inline-flex;gap:7px;align-items:center;
+}
+.smallcard:hover{border-color:var(--accent);color:var(--accent)}
+.smallcard span{color:var(--muted);font-size:10.5px}
+
+/* ---------- skills ---------- */
+.skillgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px 28px}
+@media(max-width:560px){.skillgrid{grid-template-columns:1fr}}
+.skillgroup h3{
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 10px;font-weight:500;
+}
+.taglist{display:flex;flex-wrap:wrap;gap:6px}
+.taglist span{
+  font-size:12px;color:var(--ink-soft);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:5px;padding:4px 9px;
+}
+
+/* ---------- contact / footer ---------- */
+.contact{
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:26px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center;
+}
+.contact h2{margin:0 0 4px;font-size:18px}
+.contact p{margin:0;color:var(--muted);font-size:13px}
+footer{padding-block:26px 40px;text-align:center}
+footer p{font-family:var(--mono);font-size:11px;color:var(--muted);margin:0}
+
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+/* ---------- motion ---------- */
+:root{scroll-behavior:smooth}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s cubic-bezier(.16,.8,.3,1),transform .6s cubic-bezier(.16,.8,.3,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+.pcard,.aicard,.statline div,.smallcard,.linkrow a,.taglist span{
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease,background .18s ease;
+}
+.pcard:hover,.aicard:hover{
+  transform:translateY(-3px);
+  border-color:var(--accent);
+  box-shadow:0 10px 22px -14px rgba(0,0,0,.35);
+}
+.linkrow a:hover,.smallcard:hover{transform:translateY(-2px)}
+.statline div{transition:background .18s ease}
+.statline div:hover{background:var(--surface-2)}
+.taglist span:hover{border-color:var(--accent);color:var(--ink)}
+
+.topbar nav a{position:relative}
+.topbar nav a::after{
+  content:"";position:absolute;left:9px;right:9px;bottom:3px;height:1px;
+  background:var(--accent);transform:scaleX(0);transform-origin:left;
+  transition:transform .25s ease;
+}
+.topbar nav a:hover::after{transform:scaleX(1)}
+.topbar nav a:hover{color:var(--ink)}
+
+.themetoggle{transition:transform .45s cubic-bezier(.16,.8,.3,1),border-color .18s ease}
+.themetoggle.spun{transform:rotate(180deg)}
+.langtoggle button{transition:background .18s ease,color .18s ease}
+
+.tlitem::before{transition:transform .2s ease,box-shadow .2s ease}
+.tlitem:hover::before{transform:scale(1.3);box-shadow:0 0 0 4px var(--accent-soft)}
+
+@media (prefers-reduced-motion: reduce){
+  :root{scroll-behavior:auto}
+  .reveal{opacity:1!important;transform:none!important;transition:none!important}
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="topbar">
+  <a class="mark plain" href="#top">mariann<span class="dot">.</span>dev</a>
+  <nav id="primary-nav">
+    <a href="#experience" data-i18n="nav.exp">Experiencia</a>
+    <a href="#ai-work" data-i18n="nav.ai">Trabajo en IA</a>
+    <a href="#projects" data-i18n="nav.projects">Proyectos</a>
+    <a href="#skills" data-i18n="nav.skills">Skills</a>
+    <a href="#contact" data-i18n="nav.contact">Contacto</a>
+  </nav>
+  <div class="topctrls">
+    <div class="langtoggle" role="group" aria-label="Language">
+      <button type="button" id="btn-es" aria-pressed="true">ES</button>
+      <button type="button" id="btn-en" aria-pressed="false">EN</button>
+    </div>
+    <button type="button" class="themetoggle" id="btn-theme" aria-label="Toggle theme" title="Toggle theme">◐</button>
+  </div>
+</div>
+
+<div class="wrap" id="top">
+
+  <section class="hero" style="border-top:0;padding-top:40px">
+    <div class="eyebrow" data-i18n="hero.eyebrow">Software Engineer — Sistemas de IA</div>
+    <h1>Mariano Mangialavori</h1>
+    <p class="role" data-i18n="hero.role">Full-stack · agentes de IA · plataformas de producto</p>
+    <p class="lede" data-i18n="hero.lede">Ingeniero full-stack con más de 8 años en software en producción, enfocado hoy en sistemas de IA: agentes con tool-calling, pipelines RAG, la capa multi-proveedor debajo de todo eso, y los servicios en Python y TypeScript que lo corren. Trabajo full-time en una plataforma de analítica de inversión, y en paralelo soy el único ingeniero de dos productos para clientes propios.</p>
+
+    <div class="statline">
+      <div><b>8+</b><span data-i18n="stat.years">años de experiencia</span></div>
+      <div><b>2023</b><span data-i18n="stat.lead">Tech Lead en Flame Factory</span></div>
+      <div><b>2</b><span data-i18n="stat.solo">plataformas propias, en solitario</span></div>
+      <div><b>AR</b><span data-i18n="stat.loc">Buenos Aires · UTC-3</span></div>
+    </div>
+
+    <div class="linkrow">
+      <a href="mailto:mariano.mangialavori@outlook.com"><b>@</b> mariano.mangialavori@outlook.com</a>
+      <a href="https://github.com/mariann03" target="_blank" rel="noopener"><b>gh</b> github.com/mariann03</a>
+      <a href="https://linkedin.com/in/mariano-mangialavori" target="_blank" rel="noopener"><b>in</b> linkedin.com/in/mariano-mangialavori</a>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="eyebrow" data-i18n="exp.eyebrow">Trayectoria</div>
+    <h2 data-i18n="exp.title">Experiencia profesional</h2>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <section id="ai-work">
+    <div class="eyebrow" data-i18n="ai.eyebrow">Lo más reciente</div>
+    <h2 data-i18n="ai.title">Trabajo destacado en IA</h2>
+    <div class="aicards" id="aicards"></div>
+  </section>
+
+  <section id="projects">
+    <div class="eyebrow" data-i18n="proj.eyebrow">Fuera del horario</div>
+    <h2 data-i18n="proj.title">Proyectos personales</h2>
+    <div id="projectgroups"></div>
+  </section>
+
+  <section id="skills">
+    <div class="eyebrow" data-i18n="skills.eyebrow">Caja de herramientas</div>
+    <h2 data-i18n="skills.title">Skills</h2>
+    <div class="skillgrid" id="skillgrid"></div>
+  </section>
+
+  <section id="contact" style="padding-bottom:0">
+    <div class="contact">
+      <div>
+        <h2 data-i18n="contact.title">¿Hablamos?</h2>
+        <p data-i18n="contact.sub">Abierto a charlar sobre sistemas de IA, desarrollo fullstack o el próximo bot innecesariamente elaborado.</p>
+      </div>
+      <div class="linkrow">
+        <a href="mailto:mariano.mangialavori@outlook.com"><b>@</b> Email</a>
+        <a href="https://github.com/mariann03" target="_blank" rel="noopener"><b>gh</b> GitHub</a>
+        <a href="https://linkedin.com/in/mariano-mangialavori" target="_blank" rel="noopener"><b>in</b> LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p id="footer-line">made with ♥ by <s>claude</s> mariann</p>
+  </footer>
+</div>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- content ---------------- */
+  var I18N = {
+    es: {
+      "nav.exp":"Experiencia","nav.ai":"Trabajo en IA","nav.projects":"Proyectos","nav.skills":"Skills","nav.contact":"Contacto",
+      "hero.eyebrow":"Software Engineer — Sistemas de IA",
+      "hero.role":"Full-stack · agentes de IA · plataformas de producto",
+      "hero.lede":"Ingeniero full-stack con más de 8 años en software en producción, enfocado hoy en sistemas de IA: agentes con tool-calling, pipelines RAG, la capa multi-proveedor debajo de todo eso, y los servicios en Python y TypeScript que lo corren. Trabajo full-time en una plataforma de analítica de inversión, y en paralelo soy el único ingeniero de dos productos para clientes propios.",
+      "stat.years":"años de experiencia","stat.lead":"Tech Lead en Flame Factory","stat.solo":"plataformas propias, en solitario","stat.loc":"Buenos Aires · UTC-3",
+      "exp.eyebrow":"Trayectoria","exp.title":"Experiencia profesional",
+      "ai.eyebrow":"Lo más reciente","ai.title":"Trabajo destacado en IA",
+      "proj.eyebrow":"Fuera del horario","proj.title":"Proyectos personales",
+      "skills.eyebrow":"Caja de herramientas","skills.title":"Skills",
+      "contact.title":"¿Hablamos?","contact.sub":"Abierto a charlar sobre sistemas de IA, desarrollo fullstack o el próximo bot innecesariamente elaborado.",
+      "footer":"made with ♥ by <s>claude</s> mariann"
+    },
+    en: {
+      "nav.exp":"Experience","nav.ai":"AI Work","nav.projects":"Projects","nav.skills":"Skills","nav.contact":"Contact",
+      "hero.eyebrow":"Software Engineer — AI Systems",
+      "hero.role":"Full-stack · AI agents · product platforms",
+      "hero.lede":"Full-stack engineer with 8+ years in production software, now working mostly on AI systems: tool-calling agents, RAG pipelines, the multi-provider layer underneath them, and the Python and TypeScript services that run it. My day job is a microservices platform for an investment analytics company; alongside it I own two client products solo.",
+      "stat.years":"years of experience","stat.lead":"Tech Lead at Flame Factory","stat.solo":"solo-owned client platforms","stat.loc":"Buenos Aires · UTC-3",
+      "exp.eyebrow":"Track record","exp.title":"Professional experience",
+      "ai.eyebrow":"Latest work","ai.title":"Selected AI work",
+      "proj.eyebrow":"After hours","proj.title":"Personal projects",
+      "skills.eyebrow":"Toolbox","skills.title":"Skills",
+      "contact.title":"Let's talk","contact.sub":"Open to talk about AI systems, fullstack development, or whatever unnecessarily elaborate bot comes next.",
+      "footer":"made with ♥ by <s>claude</s> mariann"
+    }
+  };
+
+  var EXPERIENCE = {
+    es: [
+      {
+        role:"Tech Lead", org:"MPI", href:"https://www.markovprocesses.com/", via:"vía <a href=\"https://flamefactory.io/\" target=\"_blank\" rel=\"noopener\">Flame Factory</a>", when:"2024 — presente",
+        desc:"Plataforma de analítica de inversión para asset managers institucionales.",
+        bullets:[
+          "Team lead de un equipo de 4 personas, junto a los ingenieros propios del cliente. 500+ commits en una plataforma de microservicios: 5 orquestadores Node/Hono y 7 servicios sobre OpenSearch, Redis, PostgreSQL y MariaDB detrás de un gateway Kong, corriendo en Kubernetes con ArgoCD y Terraform, observada con Grafana, Prometheus, OpenTelemetry y Pyroscope.",
+          "Features del servicio de analítica en Python (FastAPI, NumPy, SciPy, Numba, CVXOPT): análisis de estilo por retornos y forecasting Monte Carlo, con benchmarks compuestos y por peers.",
+          "Encontró un bug de cache-correctness donde el body del POST quedaba afuera de la key, causando colisiones entre requests distintos.",
+          "Consolidó Redis en un único cluster con namespaces centralizados, base sobre la que se construyó el servicio strangler que migra la plataforma legacy.",
+          "Propuso repartir tráfico en el gateway Kong por path entre la plataforma vieja y la nueva durante la reescritura, para no bloquear a los usuarios mientras avanzaba la migración."
+        ]
+      },
+      {
+        role:"Tech Lead", org:"Smarty", href:"https://www.smarty.ai/", via:"vía <a href=\"https://flamefactory.io/\" target=\"_blank\" rel=\"noopener\">Flame Factory</a>", when:"2023 — 2024",
+        desc:"Un calendario web que usa IA para organizar eventos y horarios de equipo.",
+        bullets:[
+          "Integración con Google Calendar y creación de eventos/tareas con IA para elegir horarios óptimos según la disponibilidad del equipo.",
+          "Interfaz de calendario drag-and-drop con actualizaciones en tiempo real; estabilización de la plataforma y modularización del código.",
+          "(2026) Diseñó y construyó la plataforma de agente de código con IA del cliente — ver Trabajo destacado en IA."
+        ]
+      },
+      {
+        role:"Software Engineer y Front End Lead", org:"HomeVision", href:"https://homevision.co/", when:"2021 — 2022",
+        desc:"Plataforma de tasación de propiedades para prestamistas, inmobiliarias, dueños e inversores.",
+        bullets:[
+          "React, Styled Components y TypeScript en el frontend; Buffalo (Golang) en el backend.",
+          "Construyó la feature más crítica de la app: un módulo de Control de Calidad con reglas y machine learning que marcaba errores en tasaciones, con UI estilo Google Docs con comentarios inline.",
+          "Definió convenciones de código (Prettier, ESLint, Babel) y propuso una configuración de Docker Compose con PostgreSQL, Redis y Elasticsearch."
+        ]
+      },
+      {
+        role:"Mobile Software Engineer", org:"Equinox+", href:"https://equinoxplus.com/", when:"2020 — 2021",
+        desc:"App móvil de una cadena de fitness multinacional.",
+        bullets:[
+          "React Native y TypeScript, con Apollo GraphQL para estado y datos.",
+          "Pantallas de login/signup, clases on-demand y suscripción integrada con Stripe; componentes reutilizables con animaciones custom (Bottom Sheet, Toast).",
+          "Trabajó con código nativo (Kotlin y Swift) para resolver problemas del reproductor de video."
+        ]
+      },
+      {
+        role:"Software Engineer", org:"LSD", when:"2020",
+        desc:"Plataforma de streaming totalmente personalizable, con una página distinta por cliente armada dinámicamente desde el backend.",
+        bullets:[
+          "Propuso e implementó una solución con Next.js (SSR) en lugar de un enfoque estático, para mantener compatibilidad con buscadores y escalar en infraestructura serverless.",
+          "Primer proyecto con interacción directa con el cliente; definió la arquitectura pensando en escalabilidad y compatibilidad con crawlers."
+        ]
+      },
+      {
+        role:"Software Engineer", org:"Seamless · GovOS", href:"https://www.govos.com/", via:"vía Bons, hoy <a href=\"https://www.refokus.com/\" target=\"_blank\" rel=\"noopener\">Refokus</a>", when:"2019 — 2020",
+        desc:"Suite de plataformas para modernizar operaciones y servicios de gobiernos.",
+        bullets:[
+          "SeamlessDocs: conversión de PDFs a formularios web, con React y Redux — foco en nuevas features y refactor de componentes legacy.",
+          "Service Center: portal de recursos y formularios, sobre un stack híbrido de React, AngularJS y Node.js (Express, Mongoose, Seneca).",
+          "Modernización de dependencias (Node.js, Gulp, ESLint, Babel) resolviendo más de 4 años de deuda técnica acumulada.",
+          "GRM: bug fixes y mantenimiento de este CRM para gobiernos, construido en AngularJS."
+        ]
+      },
+      {
+        role:"Frontend Developer → Full-Stack Developer", org:"Produck", via:"vía Bons, hoy <a href=\"https://www.refokus.com/\" target=\"_blank\" rel=\"noopener\">Refokus</a>", when:"2018 — 2019",
+        desc:"Herramienta propia de gestión de proyectos.",
+        bullets:[
+          "React, Apollo GraphQL, Flow/TypeScript.",
+          "Implementó dependencias entre tareas, subtareas, integración con Google Drive/Calendar, updates en vivo y respuestas optimistas."
+        ]
+      }
+    ],
+    en: [
+      {
+        role:"Tech Lead", org:"MPI", href:"https://www.markovprocesses.com/", via:"via <a href=\"https://flamefactory.io/\" target=\"_blank\" rel=\"noopener\">Flame Factory</a>", when:"2024 — present",
+        desc:"Investment analytics platform for institutional asset managers.",
+        bullets:[
+          "Team lead of a 4-person team, working alongside the client's own engineers. 500+ commits in a microservices platform: 5 Node/Hono orchestrators and 7 services over OpenSearch, Redis, PostgreSQL and MariaDB behind a Kong gateway, running on Kubernetes with ArgoCD and Terraform, observed through Grafana, Prometheus, OpenTelemetry and Pyroscope.",
+          "Features in the Python analytics service (FastAPI, NumPy, SciPy, Numba, CVXOPT): returns-based style analysis and Monte Carlo forecasting, covering blended and peer-pooled benchmarks.",
+          "Tracked down a cache-correctness bug where the POST body was left out of the cache key, causing different requests to collide on one entry.",
+          "Consolidated Redis into a single cluster with centralized key namespaces, which the strangler service migrating the legacy platform then built on.",
+          "Proposed splitting traffic at the Kong gateway by URL path between the old and new platforms during the rewrite, putting a usable product in front of users early."
+        ]
+      },
+      {
+        role:"Tech Lead", org:"Smarty", href:"https://www.smarty.ai/", via:"via <a href=\"https://flamefactory.io/\" target=\"_blank\" rel=\"noopener\">Flame Factory</a>", when:"2023 — 2024",
+        desc:"A web calendar that uses AI to help users organize events and team schedules.",
+        bullets:[
+          "Implemented Google Calendar integration and AI-assisted event/task creation that picks optimal time slots for a team.",
+          "Built a drag-and-drop calendar UI with real-time updates; stabilized the platform and modularized the codebase.",
+          "(2026) Designed and built the client's AI coding agent platform — see Selected AI Work."
+        ]
+      },
+      {
+        role:"Software Engineer and Front End Lead", org:"HomeVision", href:"https://homevision.co/", when:"2021 — 2022",
+        desc:"A home-valuation platform for lenders, realtors, homeowners and investors.",
+        bullets:[
+          "React, Styled Components and TypeScript on the frontend; Buffalo (Golang) on the backend.",
+          "Built the app's most critical feature: a Quality Control module, powered by ML and a rule set, that flagged appraisal errors through a Google Docs-style UI with inline comments.",
+          "Set coding conventions (Prettier, ESLint, Babel) and proposed a Docker Compose setup with PostgreSQL, Redis and Elasticsearch."
+        ]
+      },
+      {
+        role:"Mobile Software Engineer", org:"Equinox+", href:"https://equinoxplus.com/", when:"2020 — 2021",
+        desc:"Mobile app for a multinational fitness company.",
+        bullets:[
+          "React Native and TypeScript, with Apollo GraphQL for state and data.",
+          "Login/signup flow, on-demand class screen and a subscription screen integrated with Stripe; reusable animated components (Bottom Sheet, Toast).",
+          "Worked with native code (Kotlin and Swift) to resolve video player issues."
+        ]
+      },
+      {
+        role:"Software Engineer", org:"LSD", when:"2020",
+        desc:"A fully customizable streaming platform, with a unique page per client built dynamically from backend data.",
+        bullets:[
+          "Proposed and implemented a Next.js (SSR) solution instead of a static approach, to keep search-engine compatibility while scaling on serverless infrastructure.",
+          "First project with direct client interaction; defined the architecture with scalability and crawler compatibility in mind."
+        ]
+      },
+      {
+        role:"Software Engineer", org:"Seamless · GovOS", href:"https://www.govos.com/", via:"via Bons, now <a href=\"https://www.refokus.com/\" target=\"_blank\" rel=\"noopener\">Refokus</a>", when:"2019 — 2020",
+        desc:"A suite of platforms to modernize government operations and services.",
+        bullets:[
+          "SeamlessDocs: PDF-to-web-form conversion, with React and Redux — focused on new features and refactoring legacy components.",
+          "Service Center: a resource and forms portal, on a hybrid stack of React, AngularJS and Node.js (Express, Mongoose, Seneca).",
+          "Modernization effort updating outdated dependencies (Node.js, Gulp, ESLint, Babel), resolving 4+ years of accumulated technical debt.",
+          "GRM: bug fixes and maintenance for this AngularJS-based government CRM."
+        ]
+      },
+      {
+        role:"Frontend Developer → Full-Stack Developer", org:"Produck", via:"via Bons, now <a href=\"https://www.refokus.com/\" target=\"_blank\" rel=\"noopener\">Refokus</a>", when:"2018 — 2019",
+        desc:"An in-house project management tool.",
+        bullets:[
+          "React, Apollo GraphQL, Flow/TypeScript.",
+          "Implemented task dependencies, subtasks, Google Drive/Calendar integration, live updates and optimistic responses."
+        ]
+      }
+    ]
+  };
+
+  var AIWORK = {
+    es: [
+      {
+        title:"Plataforma de Operaciones de Flota", org:"Wetake", href:"https://wetake.com.ar/", when:"08/2026 — presente", status:"Lanza este mes",
+        role:"Único ingeniero", desc:"Cuatro deployables: API HTTP, worker en background, bots de mensajería y las webs de admin/cliente.",
+        items:[
+          "Agente de WhatsApp y Telegram con tool-calling tipado y una persona distinta por rol, sobre el Vercel AI SDK y una abstracción multi-proveedor (Anthropic, OpenAI, Google, DeepSeek, Ollama).",
+          "Asignaciones de chofer/vehículo modeladas como rangos temporales con constraints EXCLUDE USING GIST de PostgreSQL: la base de datos rechaza los dobles bookings por sí sola.",
+          "Árboles de rutas público e interno en un mismo proceso — el interno solo en loopback, sostenido por una lint rule y un test de frontera.",
+          "El worker maneja ingesta GPS, geofences, geocoding y notificaciones, con suites de tests de contrato, consistencia y end-to-end."
+        ],
+        stack:["Hono","Drizzle","PostgreSQL","React","Vercel AI SDK"]
+      },
+      {
+        title:"Plataforma de Agente de Código con IA", org:"Smarty · vía Flame Factory", href:"https://www.smarty.ai/", when:"03/2026 — 08/2026", status:"En uso diario del equipo del cliente",
+        role:"Único ingeniero", desc:"Un agente de código autónomo sobre el Vercel AI SDK corriendo Claude, con un toolset propio.",
+        items:[
+          "Sandbox de filesystem y shell, integración con LSP de TypeScript, gestión de workspaces, tool search, tareas programadas y compactación de contexto.",
+          "Ruteo de modelos por tiers con presupuesto de tokens por tier, sobre una capa agnóstica de proveedor (Anthropic, OpenAI, Google, xAI) con MCP y Composio.",
+          "RAG con embeddings y retrieval híbrido fusionado por Reciprocal Rank Fusion, más un extractor que saca memorias de conversaciones pasadas.",
+          "Capa de producto: workspaces multi-tenant, auth/storage con Supabase, billing con Stripe (ledger de créditos, auto top-up, expiración, webhooks) y preview en vivo de las SPAs que genera el agente."
+        ],
+        stack:["Bun","Hono","Drizzle","PostgreSQL","React 19"]
+      },
+      {
+        title:"Servicio de Conversión de Voz", org:"Proyecto personal", when:"07/2026", status:"Para uso diario con un bot de WhatsApp propio",
+        role:"Solo, por diversión", desc:"Redujo un repo de investigación (RVC) a un servicio HTTP de producción.",
+        items:[
+          "Python 3.12 con Torch, FAISS y librosa, containerizado con sets de dependencias fijados por target CPU/CUDA.",
+          "La inferencia corre en un worker separado que se descarga solo tras estar idle: 33 MB en reposo contra 1.8 GB bajo carga, con benchmarks de latencia documentados y salida byte-exact verificada contra la implementación de referencia.",
+          "Suite de pytest cubriendo bootstrap, catálogo, pipeline, servidor, worker y manejo de memoria."
+        ],
+        stack:["Python","PyTorch","FAISS","Docker"]
+      }
+    ],
+    en: [
+      {
+        title:"Fleet Operations Platform", org:"Wetake", href:"https://wetake.com.ar/", when:"08/2026 — present", status:"Launching this month",
+        role:"Sole engineer", desc:"Four deployables: HTTP API, background worker, messaging bots and the admin/client web apps.",
+        items:[
+          "A WhatsApp and Telegram agent with typed tool calling and a different persona per role, on the Vercel AI SDK over a multi-provider abstraction (Anthropic, OpenAI, Google, DeepSeek, Ollama).",
+          "Driver/vehicle assignments modeled as time ranges guarded by PostgreSQL EXCLUDE USING GIST constraints, so the database itself rejects double bookings.",
+          "Public and internal route trees live in one process — the internal one bound to loopback, kept that way by a lint rule and a boundary test.",
+          "The worker handles GPS ingestion, geofence evaluation, geocoding and notifications, with contract, consistency and end-to-end test suites."
+        ],
+        stack:["Hono","Drizzle","PostgreSQL","React","Vercel AI SDK"]
+      },
+      {
+        title:"AI Coding Agent Platform", org:"Smarty · via Flame Factory", href:"https://www.smarty.ai/", when:"03/2026 — 08/2026", status:"In daily use by the client's team",
+        role:"Sole engineer", desc:"An autonomous coding agent on the Vercel AI SDK running Claude, with a toolset written from scratch.",
+        items:[
+          "Sandboxed filesystem and shell, TypeScript LSP integration, workspace management, tool search, scheduled tasks and context compaction.",
+          "Model routing across tiers with a per-tier token budget, on a provider-agnostic layer (Anthropic, OpenAI, Google, xAI) with MCP and Composio.",
+          "RAG with embeddings and hybrid retrieval fused by Reciprocal Rank Fusion, plus a separate extractor pulling memories out of past conversations.",
+          "The product layer: multi-tenant workspaces, Supabase auth/storage, Stripe billing (credit ledger, auto top-up, expiry, webhooks) and live preview of the agent-generated SPAs."
+        ],
+        stack:["Bun","Hono","Drizzle","PostgreSQL","React 19"]
+      },
+      {
+        title:"Voice Conversion Inference Service", org:"Personal project", when:"07/2026", status:"Daily use with a personal WhatsApp bot",
+        role:"Solo, for fun", desc:"Reduced a research codebase (RVC) to a production HTTP service.",
+        items:[
+          "Python 3.12 with Torch, FAISS and librosa, containerized with dependency sets pinned per CPU/CUDA target.",
+          "Inference runs in a separate worker that unloads itself after an idle window: 33 MB at rest vs. 1.8 GB under load, with documented latency benchmarks and byte-exact output verified against the reference implementation.",
+          "pytest suite covering bootstrap, catalog, pipeline, server, worker and memory behaviour."
+        ],
+        stack:["Python","PyTorch","FAISS","Docker"]
+      }
+    ]
+  };
+
+  var PROJECTS = {
+    es: [
+      { group:"Bots & automatización", items:[
+        {name:"WhatsApp Community Bot", desc:"Bot de WhatsApp sobre un número personal (Baileys, Bun, TypeScript): stickers, remixes de audio/imagen y el comando !vc que dispara el servicio de voice conversion.", tag:"Bun · Baileys"},
+        {name:"WhatsApp Media Bot", desc:"Bot que sube a Seafile las fotos, videos y documentos que llegan a un grupo de WhatsApp, organizados en subcarpetas por fecha.", tag:"Bun · Baileys"},
+        {name:"PancakeSwap Sniper Bot", desc:"Sniper para PancakeSwap sobre ethers.js — y una versión anterior con Web3.js.", tag:"ethers.js"}
+      ]},
+      { group:"Herramientas para League of Legends", items:[
+        {name:"Claude Coach", desc:"App de escritorio (Electrobun + React) que lee el cliente de LoL vía LCU, automatiza el draft y cambia de cuenta.", tag:"Electrobun · React"},
+        {name:"LoL Classic Overlay", desc:"Overlay de partida en vivo al estilo Porofessor, scrapeando Data Dragon y el LCU en tiempo real.", tag:"TypeScript"},
+        {name:"LoL Account Viewer", desc:"Visor de cuentas de LoL con generación de códigos OTP, hecho con Remix + Vite.", tag:"Remix · otplib"}
+      ]},
+      { group:"Utilidades", items:[
+        {name:"Screen Joiner", desc:"Para joinear varios teléfonos y ver un video sincronizado entre dispositivos, conectando las pantallas entre sí.", tag:"Express · Socket.IO"}
+      ]}
+    ],
+    en: [
+      { group:"Bots & automation", items:[
+        {name:"WhatsApp Community Bot", desc:"A personal-number WhatsApp bot (Baileys, Bun, TypeScript): stickers, audio/image remixes, and the !vc command that triggers the voice conversion service.", tag:"Bun · Baileys"},
+        {name:"WhatsApp Media Bot", desc:"A bot that uploads photos, videos and documents from a WhatsApp group to Seafile, sorted into subfolders by date.", tag:"Bun · Baileys"},
+        {name:"PancakeSwap Sniper Bot", desc:"A PancakeSwap sniper bot on ethers.js — plus an earlier version on Web3.js.", tag:"ethers.js"}
+      ]},
+      { group:"League of Legends tools", items:[
+        {name:"Claude Coach", desc:"A desktop app (Electrobun + React) that reads the LoL client over LCU, automates the draft, and switches accounts.", tag:"Electrobun · React"},
+        {name:"LoL Classic Overlay", desc:"A Porofessor-style live game overlay, scraping Data Dragon and the LCU in real time.", tag:"TypeScript"},
+        {name:"LoL Account Viewer", desc:"A LoL account viewer with OTP code generation, built with Remix + Vite.", tag:"Remix · otplib"}
+      ]},
+      { group:"Utilities", items:[
+        {name:"Screen Joiner", desc:"For joining several phones and watching one synced video across devices, linking the screens to each other.", tag:"Express · Socket.IO"}
+      ]}
+    ]
+  };
+
+  var EARLY = {
+    es: {label:"Primeros proyectos en GitHub", items:[
+      {name:"forecast-app", href:"https://github.com/mariann03/forecast-app"},
+      {name:"houses-page", href:"https://github.com/mariann03/houses-page"},
+      {name:"users-demo-page", href:"https://github.com/mariann03/users-demo-page"},
+      {name:"animeList", href:"https://github.com/mariann03/animeList"},
+      {name:"comprar-gob-ar-extended", href:"https://github.com/mariann03/comprar-gob-ar-extended"},
+      {name:"jikan-bulk-requests", href:"https://github.com/mariann03/jikan-bulk-requests"},
+      {name:"keyboard-player", href:"https://github.com/mariann03/keyboard-player"}
+    ]},
+    en: {label:"Early GitHub projects", items:[
+      {name:"forecast-app", href:"https://github.com/mariann03/forecast-app"},
+      {name:"houses-page", href:"https://github.com/mariann03/houses-page"},
+      {name:"users-demo-page", href:"https://github.com/mariann03/users-demo-page"},
+      {name:"animeList", href:"https://github.com/mariann03/animeList"},
+      {name:"comprar-gob-ar-extended", href:"https://github.com/mariann03/comprar-gob-ar-extended"},
+      {name:"jikan-bulk-requests", href:"https://github.com/mariann03/jikan-bulk-requests"},
+      {name:"keyboard-player", href:"https://github.com/mariann03/keyboard-player"}
+    ]}
+  };
+
+  var SKILLS = {
+    es: [
+      {h:"IA & LLM", tags:["Agentes con tool-calling","Vercel AI SDK","Anthropic/Claude","OpenAI","Google","xAI","DeepSeek","Ollama","MCP servers","Composio","Model routing por tiers","Prompt caching","RAG · Reciprocal Rank Fusion","Graph RAG","Claude Code","Codex","Cursor"]},
+      {h:"Frontend", tags:["React","React Native","Next.js","TanStack","Redux","TypeScript","Tailwind","Shadcn","Styled Components","Storybook"]},
+      {h:"Backend", tags:["FastAPI","Hono","Node.js/Express","SQLAlchemy","Prisma","Drizzle","Zod","PostgreSQL","MongoDB","Redis","OpenSearch","GraphQL"]},
+      {h:"Infraestructura", tags:["Docker","Kubernetes","ArgoCD","Terraform","GitHub Actions","GitLab CI","AWS","Railway","Vercel","Fly","Cloudflare","Kong"]},
+      {h:"Observabilidad & calidad", tags:["OpenTelemetry","Prometheus","Grafana","Pyroscope","K6","Jest","Vitest","Pytest","Playwright"]},
+      {h:"Lenguajes", tags:["TypeScript","Python","Go","SQL","Solidity"]}
+    ],
+    en: [
+      {h:"AI & LLM", tags:["Tool-calling agents","Vercel AI SDK","Anthropic/Claude","OpenAI","Google","xAI","DeepSeek","Ollama","MCP servers","Composio","Tiered model routing","Prompt caching","RAG · Reciprocal Rank Fusion","Graph RAG","Claude Code","Codex","Cursor"]},
+      {h:"Frontend", tags:["React","React Native","Next.js","TanStack","Redux","TypeScript","Tailwind","Shadcn","Styled Components","Storybook"]},
+      {h:"Backend", tags:["FastAPI","Hono","Node.js/Express","SQLAlchemy","Prisma","Drizzle","Zod","PostgreSQL","MongoDB","Redis","OpenSearch","GraphQL"]},
+      {h:"Infrastructure", tags:["Docker","Kubernetes","ArgoCD","Terraform","GitHub Actions","GitLab CI","AWS","Railway","Vercel","Fly","Cloudflare","Kong"]},
+      {h:"Observability & quality", tags:["OpenTelemetry","Prometheus","Grafana","Pyroscope","K6","Jest","Vitest","Pytest","Playwright"]},
+      {h:"Languages", tags:["TypeScript","Python","Go","SQL","Solidity"]}
+    ]
+  };
+
+  /* ---------------- render ---------------- */
+  function el(tag, cls, html){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  function renderTimeline(lang){
+    var host = document.getElementById('timeline');
+    host.innerHTML = '';
+    EXPERIENCE[lang].forEach(function(row, idx){
+      var item = el('div','tlitem reveal');
+      item.style.transitionDelay = (idx*70)+'ms';
+      var head = el('div','tlhead');
+      var orgHtml = row.href ? '<a href="'+row.href+'" target="_blank" rel="noopener" class="plain" style="text-decoration:none">'+row.org+' <span class="mono" style="font-size:11px;color:var(--muted)">↗</span></a>' : row.org;
+      if(row.via) orgHtml += ' <span class="tlvia">('+row.via+')</span>';
+      head.appendChild(el('h3', null, orgHtml));
+      head.appendChild(el('span','when', row.when));
+      item.appendChild(head);
+      item.appendChild(el('p','tlrole', row.role));
+      if(row.desc) item.appendChild(el('p','tldesc', row.desc));
+      if(row.bullets && row.bullets.length){
+        var ul = el('ul');
+        row.bullets.forEach(function(b){ ul.appendChild(el('li', null, b)); });
+        item.appendChild(ul);
+      }
+      if(row.subs){
+        row.subs.forEach(function(sub){
+          var subDiv = el('div','tlsub');
+          var subTitleHtml = sub.href
+            ? '<a href="'+sub.href+'" target="_blank" rel="noopener">'+sub.title+' ↗</a>'
+            : sub.title;
+          subDiv.appendChild(el('h4', null, subTitleHtml));
+          subDiv.appendChild(el('p','tlrole', sub.role));
+          if(sub.desc) subDiv.appendChild(el('p','tldesc', sub.desc));
+          var sul = el('ul');
+          sub.items.forEach(function(b){ sul.appendChild(el('li', null, b)); });
+          subDiv.appendChild(sul);
+          item.appendChild(subDiv);
+        });
+      }
+      host.appendChild(item);
+    });
+  }
+
+  function renderAI(lang){
+    var host = document.getElementById('aicards');
+    host.innerHTML = '';
+    AIWORK[lang].forEach(function(row, idx){
+      var card = el('div','aicard reveal');
+      card.style.transitionDelay = (idx*80)+'ms';
+      var head = el('div','tlhead');
+      var orgBit = row.href
+        ? '<a href="'+row.href+'" target="_blank" rel="noopener">'+row.org+' ↗</a>'
+        : row.org;
+      head.appendChild(el('h3', null, row.title + ' <span class="mono" style="color:var(--muted);font-weight:400"> · ' + orgBit + '</span>'));
+      head.appendChild(el('span','when', row.when));
+      card.appendChild(head);
+      card.appendChild(el('div','tag', row.status + ' — ' + row.role));
+      card.appendChild(el('p','desc', row.desc));
+      var ul = el('ul');
+      row.items.forEach(function(b){ ul.appendChild(el('li', null, b)); });
+      card.appendChild(ul);
+      var stack = el('div','stack');
+      row.stack.forEach(function(s){ stack.appendChild(el('span', null, s)); });
+      card.appendChild(stack);
+      host.appendChild(card);
+    });
+  }
+
+  function renderProjects(lang){
+    var host = document.getElementById('projectgroups');
+    host.innerHTML = '';
+    PROJECTS[lang].forEach(function(grp){
+      var wrap = el('div','pgroup');
+      wrap.appendChild(el('h3', null, grp.group));
+      var grid = el('div','pgrid');
+      grp.items.forEach(function(p, idx){
+        var card = el('div','pcard reveal');
+        card.style.transitionDelay = (idx*60)+'ms';
+        card.appendChild(el('h4', null, p.name));
+        card.appendChild(el('p', null, p.desc));
+        var meta = el('div','meta');
+        meta.appendChild(el('span', null, p.tag));
+        card.appendChild(meta);
+        grid.appendChild(card);
+      });
+      wrap.appendChild(grid);
+      host.appendChild(wrap);
+    });
+    var early = EARLY[lang];
+    var ewrap = el('div','pgroup');
+    ewrap.appendChild(el('h3', null, early.label));
+    var sgrid = el('div','smallgrid');
+    early.items.forEach(function(p){
+      var a = document.createElement('a');
+      a.className = 'smallcard';
+      a.href = p.href; a.target = '_blank'; a.rel = 'noopener';
+      a.innerHTML = p.name + ' <span>↗</span>';
+      sgrid.appendChild(a);
+    });
+    ewrap.appendChild(sgrid);
+    host.appendChild(ewrap);
+  }
+
+  function renderSkills(lang){
+    var host = document.getElementById('skillgrid');
+    host.innerHTML = '';
+    SKILLS[lang].forEach(function(grp, idx){
+      var wrap = el('div','skillgroup reveal');
+      wrap.style.transitionDelay = (idx*50)+'ms';
+      wrap.appendChild(el('h3', null, grp.h));
+      var tl = el('div','taglist');
+      grp.tags.forEach(function(t){ tl.appendChild(el('span', null, t)); });
+      wrap.appendChild(tl);
+      host.appendChild(wrap);
+    });
+  }
+
+  function applyI18n(lang){
+    document.querySelectorAll('[data-i18n]').forEach(function(node){
+      var key = node.getAttribute('data-i18n');
+      if(I18N[lang][key] !== undefined) node.textContent = I18N[lang][key];
+    });
+    document.getElementById('footer-line').innerHTML = I18N[lang]['footer'];
+    document.documentElement.setAttribute('lang', lang);
+    document.getElementById('btn-es').setAttribute('aria-pressed', String(lang==='es'));
+    document.getElementById('btn-en').setAttribute('aria-pressed', String(lang==='en'));
+  }
+
+  var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'}) : null;
+
+  function observeReveals(){
+    var nodes = document.querySelectorAll('.reveal:not(.in)');
+    if(reduceMotion || !io){
+      nodes.forEach(function(n){ n.classList.add('in'); });
+      return;
+    }
+    nodes.forEach(function(n){ io.observe(n); });
+  }
+
+  var contactBox = document.querySelector('.contact');
+  if(contactBox) contactBox.classList.add('reveal');
+
+  function render(lang){
+    applyI18n(lang);
+    renderTimeline(lang);
+    renderAI(lang);
+    renderProjects(lang);
+    renderSkills(lang);
+    observeReveals();
+  }
+
+  function getStoredLang(){
+    try{ return localStorage.getItem('mm-lang'); }catch(e){ return null; }
+  }
+  function storeLang(lang){
+    try{ localStorage.setItem('mm-lang', lang); }catch(e){}
+  }
+
+  var initialLang = getStoredLang() || 'es';
+  render(initialLang);
+
+  document.getElementById('btn-es').addEventListener('click', function(){ render('es'); storeLang('es'); });
+  document.getElementById('btn-en').addEventListener('click', function(){ render('en'); storeLang('en'); });
+
+  /* ---------------- hero load-in sequence ---------------- */
+  (function(){
+    var heroTargets = document.querySelectorAll(
+      '.hero .eyebrow, .hero h1, .hero .role, .hero .lede, .hero .statline, .hero .linkrow'
+    );
+    heroTargets.forEach(function(node, i){
+      node.classList.add('reveal');
+      node.style.transitionDelay = reduceMotion ? '0ms' : (i*90)+'ms';
+    });
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        heroTargets.forEach(function(node){ node.classList.add('in'); });
+      });
+    });
+  })();
+
+  /* ---------------- theme toggle ---------------- */
+  var root = document.documentElement;
+  function getStoredTheme(){
+    try{ return localStorage.getItem('mm-theme'); }catch(e){ return null; }
+  }
+  function storeTheme(t){
+    try{ localStorage.setItem('mm-theme', t); }catch(e){}
+  }
+  var storedTheme = getStoredTheme();
+  if(storedTheme === 'light' || storedTheme === 'dark'){
+    root.setAttribute('data-theme', storedTheme);
+  }
+  document.getElementById('btn-theme').addEventListener('click', function(){
+    var current = root.getAttribute('data-theme');
+    var isDark = current ? current === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    var next = isDark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    storeTheme(next);
+    var btn = document.getElementById('btn-theme');
+    btn.classList.toggle('spun');
+  });
+
+})();
+</script>
